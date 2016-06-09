@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Starter Template for Bootstrap</title>
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/starter-template/starter-template.css" rel="stylesheet">
+    <style type="text/css">
+    	canvas{
+    		border: 1px solid #000;
+    	}
+    </style>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">FabricJs</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="starter-template">
+	      <div class="row">
+	      	<div class="col-md-4">
+	      		<div class="row">
+		      		<div class="col-md-9">
+		      			Background Color
+		      		</div>
+		      		<div class="col-md-3">
+		      			<input type="color" id="bg_color">
+		      		</div>
+		      		<div class="col-md-9">
+	      				<input type="text" id="new_text" class="form-control" placeholder="Add new text here">
+		      		</div>
+		      		<div class="col-md-3">
+	      				<input type="button" id="btn_add_new" class="btn btn-primary" value="Add New">
+		      		</div>
+		      	</div>
+		      	<h4>Layers</h4>
+      			<ul id="layers" class="list-group"></ul>
+	      	</div>
+	      	<div class="col-md-8">
+	      		<canvas width="800" height="800" id="canvas"></canvas>
+	      	</div>
+	      </div>
+      </div>
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://fabricjs.com/lib/fabric.js"></script>
+	<script type="text/javascript">
+        var canvas = new fabric.Canvas("canvas");
+        canvas.backgroundColor = '#666';
+        canvas.renderAll();
+
+        $('#bg_color').on('input', function() { 
+        	canvas.backgroundColor = $('#bg_color').val();
+        	canvas.renderAll();
+        });
+
+		$('#btn_add_new').click(function(e) {
+	        e.preventDefault();
+	        if($('#new_text').val() !== '')
+	        {
+		        var newText = new fabric.IText($('#new_text').val(), { 
+		            fontFamily: "Arial", 
+		            left: 10,
+		            top: 10,
+		            fontSize: 20,
+		            textAlign: "left",
+		            fill: '#fff',
+		        });
+		        canvas.add(newText);
+		        canvas.renderAll();
+		        $('#new_text').val('');
+		        renderLayers();
+	        }
+	    });
+
+	    function renderLayers(){
+	    	$("#layers").html("");
+	    	var layers = canvas.getObjects();
+	    	for(var i=0; i<layers.length; i++)
+	    	{
+	    		$('#layers').append('<li class="list-group-item">'+layers[i].text+'<a onClick="removeLayers('+i+')" class="btn btn-sm btn-warning pull-right">X</a></li>')
+	    	}
+	    }
+
+	    function removeLayers(index){
+	    	canvas.getObjects()[index].remove();
+	    	renderLayers();
+	    }
+
+	    canvas.on('object:modified', function(){
+	    	renderLayers();
+	    });
+
+	</script>
+  </body>
+</html>
+
+
